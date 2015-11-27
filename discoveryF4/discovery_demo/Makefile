@@ -39,7 +39,7 @@ all: $(BIN_IMAGE)
 $(BIN_IMAGE): $(EXECUTABLE)
 	$(OBJCOPY) -O binary $^ $@
 
-$(EXECUTABLE): main.c selftest.c system_stm32f4xx.c startup_stm32f4xx.s stm32f4xx_it.c \
+$(EXECUTABLE): main.c usart.c selftest.c system_stm32f4xx.c startup_stm32f4xx.s stm32f4xx_it.c \
 	usb_bsp.c usbd_desc.c usbd_usr.c usb_core.c \
 	../libstm/Utilities/STM32F4-Discovery/stm32f4_discovery.c \
 	../libstm/Utilities/STM32F4-Discovery/stm32f4_discovery_audio_codec.c \

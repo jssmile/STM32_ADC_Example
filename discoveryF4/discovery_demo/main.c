@@ -9,6 +9,8 @@
 //Library config for this project!!!!!!!!!!!
 #include "stm32f4xx_conf.h"
 #include "stm32f4xx_adc.h"
+#include "stm32f4xx_usart.h"
+#include "usart.h"
 
 /** @addtogroup STM32F4-Discovery_Demo
   * @{
@@ -44,6 +46,7 @@ __IO int8_t X_Offset, Y_Offset, Z_Offset  = 0x00;
 uint8_t Buffer[6];
 int ConvertedValue = 0; //Converted value readed from ADC
 
+
 /* Private function prototypes -----------------------------------------------*/
 static uint32_t Demo_USBConfig(void);
 //static void TIM4_Config(void);
@@ -54,7 +57,8 @@ void adc_configure();
 void GPIO_PIN_INIT(void);
 
 inline int conv2temp(uint16_t value){
-  return ( ( ( ( value * 2960 ) / 4096 ) - 760 ) / ( 25 / 10 ) ) + 25;
+  int result = 0;
+  return result = ( ( ( ( value * 2960 ) / 4096 ) - 760 ) / ( 25 / 10 ) ) + 25;
 }
 
 //static uint16_t testing=10;
@@ -64,10 +68,17 @@ inline int conv2temp(uint16_t value){
   * @param  None
   * @retval None
   */
+  void initialize()
+  {
+    init_USART3(9600);
+    USART_puts(USART3, "hello\n\r");
+
+  }
 int main(void)
 {
+  
+  initialize();
   RCC_ClocksTypeDef RCC_Clocks;
-
   /* Initialize LEDs and User_Button on STM32F4-Discovery --------------------*/
   STM_EVAL_PBInit(BUTTON_USER, BUTTON_MODE_EXTI); 
   
@@ -105,8 +116,10 @@ int main(void)
       for(i=0; i<12; ++i)
         sum|=(ConvertedValue & (1 << i)?USING_PIN[i]:0);
       
-      GPIO_SetBits(GPIOE, sum);      
-      Delay(100);
+      GPIO_SetBits(GPIOE, sum);
+      USART_putd(USART3, ConvertedValue);
+      USART_puts(USART3, "\n\r");  
+      Delay(1);
     }
 
 /* Try to test ADC.*/
@@ -141,6 +154,8 @@ void adc_configure(){
 
   // use channel 10 from ADC1, with sample time 144 cycles
   ADC_RegularChannelConfig(ADC1, ADC_Channel_10, 1, ADC_SampleTime_144Cycles);
+  //ADC_RegularChannelConfig(ADC1, ADC_Channel_TempSensor, 1, ADC_SampleTime_144Cycles);
+  //ADC_TempSensorVrefintCmd(ENABLE);
 
   ADC_Cmd(ADC1, ENABLE);
 }
