@@ -28,8 +28,7 @@ void receive_task(){
 	//while(1){
 		if(Receive_String_Ready){
 			if(received_string[0] == 'a'){
-				USART_puts(USART3, "left:");
-				USART_puts(USART3, " right:");
+				USART_puts(USART3, "Working successful!!!");
 				USART_puts(USART3, "\r\n");
 			}else{
 				USART_puts(USART3, received_string);
